@@ -368,7 +368,7 @@ while True:
         predicted = []
 
     labels = {23: "Number 0", 24: "Number 1", 25: "Number 2", 26: "Number 3", 27: "Number 4",
-              28: "Number 5", 29: "Number 6", 30: "Number 7", 31: "Number 8", 32: "Number 9",
+              28: "Number 5", 29: "Number 6", 75: "Number 7", 31: "Number 8", 32: "Number 9",
               33: "OK", 34: "Cancel", 35: "Pause", 36: "Continue",
               21: "Task1", 22: "Task2", 64: "Task3", 65: "Task4"}
     # print('predicted classes: \t', predicted)
