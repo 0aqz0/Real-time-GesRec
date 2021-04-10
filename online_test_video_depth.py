@@ -375,7 +375,28 @@ while True:
     predicted_labels = [labels[p] for p in predicted if p in labels]
     print('predicted classes: \t', predicted_labels)
 
+    # control robots
+    # from communication import *
+    # stop_threads = False
+    # host_addr = '192.168.8.8'
+    # robot_addr = '192.168.8.22'
+    # cmd_port = 60001
+    # robot1 = CmdSender(cmd_addr=robot_addr, cmd_port=cmd_port, detect_keyboard=False)
+    # if len(predicted_labels) == 0:
+    #     robot1.send(0, 0)
+    # elif predicted_labels[-1] == "OK":
+    #     robot1.send(0.1, 0)
+    # elif predicted_labels[-1] == "Pause":
+    #     robot1.send(0, 0)
+    # elif predicted_labels[-1] == "Continue":
+    #     robot1.send(0.1, 0)
+    # elif predicted_labels[-1] == "Cancel":
+    #     robot1.send(0, 0)
+
     cv2.putText(frame, fps, (0, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
+    cv2.putText(color_image, fps, (0, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
+    # Stack both images horizontally
+    frame = np.hstack((color_image, cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)))
     cv2.imshow("Result", frame)
 
     if cv2.waitKey(1)&0xFF == ord('q'):
