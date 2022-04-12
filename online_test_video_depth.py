@@ -23,6 +23,7 @@ from utils import  AverageMeter, LevenshteinDistance, Queue
 import pdb
 import numpy as np
 import datetime
+import socket
 
 
 ###Pretrained RGB models
@@ -210,6 +211,7 @@ results = []
 prev_best1 = opt.n_classes_clf
 spatial_transform.randomize_parameters()
 # while cap.isOpened():
+last_prediction_length = 0
 while True:
     t1 = time.time()
     # ret, frame = cap.read()
@@ -373,27 +375,15 @@ while True:
     # print('predicted classes: \t', predicted)
     predicted_labels = [labels[p] for p in predicted if p in labels]
     print('predicted classes: \t', predicted_labels)
+    # send predicted results
+    if len(predicted_labels) > 0 and len(predicted_labels) != last_prediction_length:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.sendto(bytes(predicted_labels[-1], 'ascii'), ('127.0.0.1', 23335))
+        last_prediction_length = len(predicted_labels)
 
-    # control robots
-    # from communication import *
-    # stop_threads = False
-    # host_addr = '192.168.8.8'
-    # robot_addr = '192.168.8.22'
-    # cmd_port = 60001
-    # robot1 = CmdSender(cmd_addr=robot_addr, cmd_port=cmd_port, detect_keyboard=False)
-    # if len(predicted_labels) == 0:
-    #     robot1.send(0, 0)
-    # elif predicted_labels[-1] == "OK":
-    #     robot1.send(0.1, 0)
-    # elif predicted_labels[-1] == "Pause":
-    #     robot1.send(0, 0)
-    # elif predicted_labels[-1] == "Continue":
-    #     robot1.send(0.1, 0)
-    # elif predicted_labels[-1] == "Cancel":
-    #     robot1.send(0, 0)
-
-    cv2.putText(frame, fps, (0, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-    cv2.putText(color_image, fps, (0, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
+    cv2.putText(frame, 'Predicted classes: {}'.format(predicted_labels[-1] if len(predicted_labels) > 0 else None), (0, 60), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255), 1, cv2.LINE_AA)
+    cv2.putText(frame, fps, (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255), 1, cv2.LINE_AA)
+    cv2.putText(color_image, fps, (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255), 1, cv2.LINE_AA)
     # Stack both images horizontally
     frame = np.hstack((color_image, cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)))
     cv2.imshow("Result", frame)
