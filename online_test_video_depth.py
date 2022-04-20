@@ -371,7 +371,7 @@ while True:
 
     labels = {23: "Number 0", 24: "Number 1", 25: "Number 2", 26: "Number 3", 27: "Number 4",
               28: "Number 5", 29: "Number 6", 75: "Number 7", 31: "Number 8", 32: "Number 9",
-              33: "OK", 36: "Cancel", 35: "Task1", 64: "Task2", 65: "Task3"}
+              33: "OK", 36: "Cancel", 62: "Task1", 64: "Task2", 65: "Task3"}
     # print('predicted classes: \t', predicted)
     predicted_labels = [labels[p] for p in predicted if p in labels]
     print('predicted classes: \t', predicted_labels)
